@@ -49,7 +49,7 @@
                     </svg>
                 </button>
                 <button id="switchTheme"></button>
-                <a class="navbar-brand text-white fw-bold fs-5" href="/index.html"><img src="https://codeyad.com/assets/images/logo.png?v=LeGU9ZpNcH1zdFN4EVqXRwoS_Iaehq3X46AqXt2uWPk" alt="Codeyad"></a>
+                <a class="navbar-brand text-white fw-bold fs-5" href="/blog-pure/index.php"></a>
             </div>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
@@ -60,35 +60,33 @@
             <div class="collapse navbar-collapse right-nav justify-content-start" id="navbar">
                 <ul class="navbar-nav nav-left">
                     <li class="nav-item me-0">
-                        <a class="nav-link mt-3 mt-lg-0" href="/index.html">
+                        <a class="nav-link mt-3 mt-lg-0" href="/blog-pure/index.php">
                             <i class="fa fa-home" aria-hidden="true"></i>
                             <span>خانه</span>
                         </a>
                     </li>
                     <li class="nav-item me-0">
-                        <a class="nav-link mt-3 mt-lg-0" href="/posts.html">
+                        <a class="nav-link mt-3 mt-lg-0" href="/blog-pure/posts.php">
                             <i class="fas fa-list"></i>
                             <span>پست ها</span>
                         </a>
                     </li>
                     
                     <li class="nav-item me-0">
-                        <a class="nav-link mt-3 mt-lg-0" href="/login.html">
+                        <a class="nav-link mt-3 mt-lg-0" href="/blog-pure/login.php">
                             <i class="fa fa-sign-in ms-1"></i>
                             <span>ورود</span>
                         </a>
                     </li>
                     
                     <li class="nav-item me-0">
-                        <a class="nav-link mt-3 mt-lg-0" href="/register.html">
+                        <a class="nav-link mt-3 mt-lg-0" href="/blog-pure/register.php">
                             <i class="fa fa-user-plus ms-1"></i>
                             <span>عضویت</span>
                         </a>
                     </li>
                 </ul>
             </div>
-
-            
         </div>
     </nav>
 
@@ -101,7 +99,7 @@
                     لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد.
                 </p>
                 <div class="mt-3">
-                    <a href="#posts" class="btn btn-secondary">پست ها</a>
+                    <a href="/blog-pure/posts.php" class="btn btn-secondary">پست ها</a>
                 </div>
             </div>
         </div>

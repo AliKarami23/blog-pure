@@ -2,43 +2,37 @@
 session_start();
 include "database/pdo_connection.php";
 
-if(isset($_SESSION['user'])){
+if (isset($_SESSION['user'])) {
     unset($_SESSION['user']);
 }
 
-$error="";
+$error = "";
 
-if(
-    isset($_POST['email']) && $_POST['email'] !== '' 
-    && isset($_POST['password']) && $_POST['password'] !== '' 
-     )
-    {
+if (
+    isset($_POST['email']) && $_POST['email'] !== ''
+    && isset($_POST['password']) && $_POST['password'] !== ''
+) {
 
-        if(isset($_POST['sub'])){
-            $email=$_POST['email'];
-            $password=$_POST['password'];
-            $result=$conn->prepare("SELECT * FROM users WHERE email=? AND password=?");
-            $result->bindValue(1,$email);
-            $result->bindValue(2,$password);
-            $result->execute();
-            if($result->rowCount()>=1){
-                $_SESSION['user']=$_POST['email'];
-                // print_r($_SESSION);
-                header("location:PANEL\index.php");
-            }
-            else{
-                $error ="رمز عبور یا ایمیل اشتباه است";
-            }
+    if (isset($_POST['sub'])) {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $result = $conn->prepare("SELECT * FROM users WHERE email=? AND password=?");
+        $result->bindValue(1, $email);
+        $result->bindValue(2, $password);
+        $result->execute();
+        if ($result->rowCount() >= 1) {
+            $_SESSION['user'] = $_POST['email'];
+            // print_r($_SESSION);
+            header("location:PANEL\index.php");
+        } else {
+            $error = "رمز عبور یا ایمیل اشتباه است";
         }
-   
     }
-
-
-    else{
-        if( !empty($_POST)){
-     $error ="فرم را پر کنید";}
+} else {
+    if (!empty($_POST)) {
+        $error = "فرم را پر کنید";
     }
-
+}
 
 ?>
 
@@ -62,42 +56,42 @@ if(
     <title>ورود به حساب کاربری</title>
 </head>
 <body>
-    <section class="d-flex justify-content-center align-items-center min-h-screen bg">
-        <div id="overlay"></div>
-        <div class="form-container">
-            <form action="#" method="POST">
+<section class="d-flex justify-content-center align-items-center min-h-screen bg">
+    <div id="overlay"></div>
+    <div class="form-container">
+        <form action="#" method="POST">
             <section style="color:red;">
                 <?php
-                 if($error!=="") echo $error;
+                if($error!=="") echo $error;
                 ?>
             </section>
-         
-                <h1 class="title">ورود به حساب کاربری</h1>
-                <div class="mt-3 position-relative">
-                    <input name="email" type="email" class="field " placeholder="ایمیل ...">
-                    <i class="fa fa-user field_icon"></i>
-                </div>
-                <div class="mt-3 position-relative">
-                    <input name="password" type="password" class="field " id="fieldPass" placeholder="رمز عبور ...">
-                    <i class="fa fa-lock field_icon"></i>
-                    <button type="button" id="showPass"></button>
-                </div>
-           
-                <div class="mt-3">
-                    <button  name="sub"  type="submit" class="btn-submit bg-primary ">
-                        <i class="fa fa-sign-in ms-1"></i>
-                        <span>ورود به حساب کاربری</span>
-                    </button>
-                </div>
 
-                <p class="text">
-                    حساب کاربری ندارید ؟ <a href="/register.html" class="text-primary">یکی بسازید</a>
-                </p>
-            </form>
-        </div>
-    </section>
+            <h1 class="title">ورود به حساب کاربری</h1>
+            <div class="mt-3 position-relative">
+                <input name="email" type="email" class="field " placeholder="ایمیل ...">
+                <i class="fa fa-user field_icon"></i>
+            </div>
+            <div class="mt-3 position-relative">
+                <input name="password" type="password" class="field " id="fieldPass" placeholder="رمز عبور ...">
+                <i class="fa fa-lock field_icon"></i>
+                <button type="button" id="showPass"></button>
+            </div>
 
-    <script src="js/showPassword.js"></script>
-    <script src="js/darkMode.js"></script>
+            <div class="mt-3">
+                <button  name="sub"  type="submit" class="btn-submit bg-primary ">
+                    <i class="fa fa-sign-in ms-1"></i>
+                    <span>ورود به حساب کاربری</span>
+                </button>
+            </div>
+
+            <p class="text">
+                حساب کاربری ندارید ؟ <a href="/blog-pure/register.php" class="text-primary">یکی بسازید</a>
+            </p>
+        </form>
+    </div>
+</section>
+
+<script src="js/showPassword.js"></script>
+<script src="js/darkMode.js"></script>
 </body>
 </html>
