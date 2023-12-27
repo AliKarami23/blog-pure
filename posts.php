@@ -1,3 +1,15 @@
+<?php
+session_start();
+include "database/pdo_connection.php";
+include "database/jdf.php";
+
+
+$query = "SELECT * FROM posts";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+
+?>
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -87,123 +99,27 @@
     <div class="container mx-auto">
         <div class="row" style="margin-top: 10rem; margin-bottom: 5rem;">
             <h1 class="posts__title">پست ها</h1>
-            <div class="col-md-6 col-lg-3 mt-3">
-                <div class="post">
-                    <div class="post__img">
-                        <a href="#">
-                            <img src="images/post_img.png" class="w-100 rounded" alt="Image post">
-                        </a>
-                    </div>
-                    <h4 class="">
-                        <a href="#" class="post__title d-block">php یا nodejs ?</a>
-                    </h4>
-                    <p class="post__desc">
-                        لوی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیبد.
-                    </p>
+            <?php
+            foreach ($stmt as $row) {
+                echo '<div class="col-md-6 col-lg-3 mt-3">';
+                echo '<div class="post">';
+                echo '<div class="post__img">';
+                $imagePath = __DIR__ . '/panel/storage/images/' . $row['image'];
+                echo '<img src="' . $imagePath . '" alt="تصویر">';
+                echo '</div>';
+                echo '<h4 class=""><a href="#" class="post__title d-block">' . $row['title'] . '</a></h4>';
+                echo '<p class="post__desc">' . $row['caption'] . '</p>';
+                echo '<a href="#" class="post__link">مشاهده پست</a>';
+                echo '</div>';
+                echo '</div>';
+            }
+            ?>
 
-                    <a href="#" class="post__link">مشاهده پست</a>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-3 mt-3">
-                <div class="post">
-                    <div class="post__img">
-                        <a href="#">
-                            <img src="images/post_img.png" class="w-100 rounded" alt="Image post">
-                        </a>
-                    </div>
-                    <h4 class="">
-                        <a href="#" class="post__title d-block">php یا nodejs ?</a>
-                    </h4>
-                    <p class="post__desc">
-                        لوی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیبد.
-                    </p>
-
-                    <a href="#" class="post__link">مشاهده پست</a>
-                </div>
-            </div>
-
-
-            <div class="col-md-6 col-lg-3 mt-3">
-                <div class="post">
-                    <div class="post__img">
-                        <a href="#">
-                            <img src="images/post_img.png" class="w-100 rounded" alt="Image post">
-                        </a>
-                    </div>
-                    <h4 class="">
-                        <a href="#" class="post__title d-block">php یا nodejs ?</a>
-                    </h4>
-                    <p class="post__desc">
-                        لوی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیبد.
-                    </p>
-
-                    <a href="#" class="post__link">مشاهده پست</a>
-                </div>
-            </div>
-
-
-            <div class="col-md-6 col-lg-3 mt-3">
-                <div class="post">
-                    <div class="post__img">
-                        <a href="#">
-                            <img src="images/post_img.png" class="w-100 rounded" alt="Image post">
-                        </a>
-                    </div>
-                    <h4 class="">
-                        <a href="#" class="post__title d-block">php یا nodejs ?</a>
-                    </h4>
-                    <p class="post__desc">
-                        لوی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیبد.
-                    </p>
-
-                    <a href="#" class="post__link">مشاهده پست</a>
-                </div>
-            </div>
-
-
-            <div class="col-md-6 col-lg-3 mt-3">
-                <div class="post">
-                    <div class="post__img">
-                        <a href="#">
-                            <img src="images/post_img.png" class="w-100 rounded" alt="Image post">
-                        </a>
-                    </div>
-                    <h4 class="">
-                        <a href="#" class="post__title d-block">php یا nodejs ?</a>
-                    </h4>
-                    <p class="post__desc">
-                        لوی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیبد.
-                    </p>
-
-                    <a href="#" class="post__link">مشاهده پست</a>
-                </div>
-            </div>
-
-
-            <div class="col-md-6 col-lg-3 mt-3">
-                <div class="post">
-                    <div class="post__img">
-                        <a href="#">
-                            <img src="images/post_img.png" class="w-100 rounded" alt="Image post">
-                        </a>
-                    </div>
-                    <h4 class="">
-                        <a href="#" class="post__title d-block">php یا nodejs ?</a>
-                    </h4>
-                    <p class="post__desc">
-                        لوی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیبد.
-                    </p>
-
-                    <a href="#" class="post__link">مشاهده پست</a>
-                </div>
-            </div>
         </div>
     </div>
-
      <footer class="footer">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <p class="fw-bold text-white mb-3 mb-md-0 fs-6">تمامی حقوق برای کدیاد محفوظ می باشد &copy;</p>
+            <p class="fw-bold text-white mb-3 mb-md-0 fs-6">تمامی حقوق محفوظ می باشد &copy;</p>
             <button type="button" id="scrollUpBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#fff" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>

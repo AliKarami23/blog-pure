@@ -1,14 +1,24 @@
 <?php
 session_start();
+include "../database/pdo_connection.php";
+include "../database/jdf.php";
 
 if (!isset($_SESSION['user'])) {
     header("location:../login.php");
 }
+
+$user_id = $_SESSION['user']['id'];
+
+$query = "SELECT * FROM posts WHERE user_id = :user_id";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -18,7 +28,6 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="css/panel.css"/>
     <title>افزودن پست جدید</title>
 </head>
-
 <body>
 <section x-data="toggleSidebar" class="">
     <nav
@@ -150,28 +159,55 @@ if (!isset($_SESSION['user'])) {
             </ul>
         </div>
     </section>
+</section>
+<section class="main" style="margin-left:100px ">
+    <div class="container">
+        <div class="card card-primary bg-light shadow p-4 mt-5">
+            <h1 class="text-gray h4 fw-bold">
+                <i class="bi bi-plus-circle"></i>
+                <span>پست ها</span>
+            </h1>
+            <?php
+            foreach ($result as $row) {
+                echo '<div class="article">';
+                echo '<div class="article-text" style="float: right; width: 65%;">';
+                echo '<h2>' . $row['title'] . '</h2>';
+                echo '<p>' . 'نویسنده: ' . $row['writer'] . '</p>';
+                echo '<p>' . 'تاریخ انتشار: ' . $row['date'] . '</p>';
+                echo '<p>' . $row['caption'] . '</p>';
+                echo '</div>';
+                echo '<div class="article-image" style="float: left; width: 25%;">';
+                echo '<img src="data:image/jpeg;base64,' . base64_encode(file_get_contents($row['image'])) . '" alt="عکس پست" style="max-width: 100%; height: auto;">';
+                echo '</div>';
+                echo '<div style="clear: both;"></div>';
+                echo '</div>';
+                echo '<div style="border-bottom: 1px solid black;width: 100%;margin: 25px 0;"></div>';
+            }
+            ?>
+        </div>
+    </div>
+</section>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"
+></script>
 
-    <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-            crossorigin="anonymous"
-    ></script>
+<script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
+<script
+        defer
+        src="https://unpkg.com/alpinejs@3.3.4/dist/cdn.min.js"
+></script>
 
-    <script
-            defer
-            src="https://unpkg.com/alpinejs@3.3.4/dist/cdn.min.js"
-    ></script>
+<!-- Resources -->
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
-    <!-- Resources -->
-    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-
-    <script src="js/charts/chart1.js"></script>
-    <script src="js/charts/chart2.js"></script>
-    <script src="js/alpineComponents.js"></script>
-    <script src="js/darkMode.js"></script>
+<script src="js/charts/chart1.js"></script>
+<script src="js/charts/chart2.js"></script>
+<script src="js/alpineComponents.js"></script>
+<script src="js/darkMode.js"></script>
 </body>
 </html>

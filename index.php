@@ -94,7 +94,7 @@
         <div id="overlay"></div>
         <div class="container header__container">
             <div class="header__content">
-                <h1 class="header__title">وبلاگ کدیاد</h1>
+                <h1 class="header__title">وبلاگ</h1>
                 <p class="header__desc">
                     لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد.
                 </p>
@@ -242,7 +242,7 @@
 
     <footer class="footer">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <p class="fw-bold text-white mb-3 mb-md-0 fs-6">تمامی حقوق برای کدیاد محفوظ می باشد &copy;</p>
+            <p class="fw-bold text-white mb-3 mb-md-0 fs-6">تمامی حقوق محفوظ می باشد &copy;</p>
             <button type="button" id="scrollUpBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#fff" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>

@@ -1,32 +1,53 @@
 <?php
-
 session_start();
 include "../database/pdo_connection.php";
 include "../database/jdf.php";
 
-if (isset($_POST['sub'])) {
-    $title = $_POST['title'];
-    $caption = $_POST['caption'];
-    $writer = $_POST['writer'];
-    $date = jdate("Y/m/d");
-    $image = $_POST['image'];
-
-    $result = $conn->prepare("INSERT INTO article SET title=?, caption=? , writer=? , date=? , image=?");
-    $result->bindValue(1, $title);
-    $result->bindValue(2, $caption);
-    $result->bindValue(3, $writer);
-    $result->bindValue(4, $date);
-    $result->bindValue(5, $image);
-    $result->execute();
-
-
-}
 if (!isset($_SESSION['user'])) {
     header("location:../login.php");
 }
 
-?>
+if (isset($_POST['sub'])) {
+    $title = htmlspecialchars($_POST['title']);
+    $caption = htmlspecialchars($_POST['caption']);
+    $writer = htmlspecialchars($_POST['writer']);
+    $user_id = $_SESSION['user']['id'];
+    $date = jdate("Y/m/d");
 
+    $image_info = getimagesize($_FILES['image_file']['tmp_name']);
+    if ($image_info === FALSE || !in_array($image_info[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
+        echo 'Error: Invalid image format.';
+        exit();
+    }
+
+    $image_path = '../storage/images/' . $_FILES['image_file']['name'];
+
+    if (!move_uploaded_file($_FILES['image_file']['tmp_name'], $image_path)) {
+        echo 'Error uploading image.';
+        exit();
+    }
+
+    $conn->beginTransaction();
+
+    try {
+        $result = $conn->prepare("INSERT INTO posts (title, caption, writer, date, image, user_id) VALUES (?, ?, ?, ?, ?, ?)");
+        $result->bindParam(1, $title);
+        $result->bindParam(2, $caption);
+        $result->bindParam(3, $writer);
+        $result->bindParam(4, $date);
+        $result->bindParam(5, $image_path);
+        $result->bindParam(6, $user_id);
+        $result->execute();
+
+        $conn->commit();
+
+        header("location:panel_posts.php");
+    } catch (Exception $e) {
+        $conn->rollBack();
+        echo "Error: " . $e->getMessage();
+    }
+}
+?>
 
 
 <!DOCTYPE html>
@@ -84,7 +105,7 @@ if (!isset($_SESSION['user'])) {
                             <a href="addpost.php"> افزودن مقاله </a>
                         </li>
                         <li class="submenu-item">
-                            <a href="posts.php"> مقاله ها</a>
+                            <a href="panel_posts.php"> مقاله ها</a>
                         </li>
                     </ul>
                 </li>
@@ -180,19 +201,13 @@ if (!isset($_SESSION['user'])) {
 
                     <span>افزودن پست</span>
                 </h1>
-                <form action="#" class="mt-4" method="POST">
+                <form action="#" class="mt-4" method="POST" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="name" class="text-gray-600 fw-bold"
                             >نام پست</label
                             >
                             <input name="title" id="name" type="text" class="form-control mt-2" />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="name" class="text-gray-600 fw-bold"
-                            > لینک عکس</label
-                            >
-                            <input name="image" id="name" type="text" class="form-control mt-2" />
                         </div>
                     </div>
 
@@ -219,7 +234,10 @@ if (!isset($_SESSION['user'])) {
                         </div>
 
                     </div>
-
+                    <div class="col-md-6">
+                        <label for="image" class="text-gray-600 fw-bold">انتخاب عکس</label>
+                        <input name="image_file" id="image" type="file" class="form-control mt-2" />
+                    </div>
                     <div class="d-flex justify-content-end mt-5">
                         <button name="sub" type="submit" class="btn btn-primary btn-lg me-3 fs-6">
                             <svg

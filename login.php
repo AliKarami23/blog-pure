@@ -16,16 +16,24 @@ if (
     if (isset($_POST['sub'])) {
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $result = $conn->prepare("SELECT * FROM users WHERE email=? AND password=?");
+
+        // استفاده از statements پیش‌فرض
+        $result = $conn->prepare("SELECT * FROM users WHERE email=?");
         $result->bindValue(1, $email);
-        $result->bindValue(2, $password);
         $result->execute();
+
         if ($result->rowCount() >= 1) {
-            $_SESSION['user'] = $_POST['email'];
-            // print_r($_SESSION);
-            header("location:PANEL\index.php");
+            $user = $result->fetch(PDO::FETCH_ASSOC);
+
+            // استفاده از password_verify برای بررسی هش شده بودن رمز عبور
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user'] = $user;
+                header("location:panel\index.php");
+            } else {
+                $error = "رمز عبور اشتباه است";
+            }
         } else {
-            $error = "رمز عبور یا ایمیل اشتباه است";
+            $error = "ایمیل اشتباه است";
         }
     }
 } else {
@@ -33,8 +41,8 @@ if (
         $error = "فرم را پر کنید";
     }
 }
-
 ?>
+
 
 
 <!DOCTYPE html>

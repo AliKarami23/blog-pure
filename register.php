@@ -1,45 +1,65 @@
 <?php
 include "database/pdo_connection.php";
 $error = "";
+
+// اگر کاربر وارد شده است، جلسه را حذف کنید
+if (isset($_SESSION['user'])) {
+    unset($_SESSION['user']);
+}
+
 if (
     isset($_POST['username']) && $_POST['username'] !== ''
     && isset($_POST['email']) && $_POST['email'] !== ''
     && isset($_POST['password']) && $_POST['password'] !== ''
-    && isset($_POST['confirm']) && $_POST['confirm'] !== '') {
+    && isset($_POST['confirm']) && $_POST['confirm'] !== ''
+) {
     if ($_POST['password'] === $_POST['confirm']) {
         if (strlen($_POST['password']) > 4) {
+            // استفاده از statements پیش‌فرض
             $sql = "SELECT * FROM users WHERE email=?";
             $statement = $conn->prepare($sql);
             $statement->execute([$_POST['email']]);
             $user = $statement->fetch();
-            if ($user === false) {
-                if (isset($_POST['sub'])) {
-                    $username = $_POST['username'];
-                    $email = $_POST['email'];
-                    $password = $_POST['password'];
-                    $result = $conn->prepare("INSERT INTO users SET username=? ,email=? ,password=?");
-                    $result->bindValue(1, $username);
-                    $result->bindValue(2, $email);
-                    $result->bindValue(3, $password);
-                    $result->execute();
 
-                }
+            if ($user === false) {
+                $username = $_POST['username'];
+                $email = $_POST['email'];
+
+                // هش کردن رمز عبور
+                $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+                $result = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+                $result->bindValue(1, $username);
+                $result->bindValue(2, $email);
+                $result->bindValue(3, $passwordHash);
+                $result->execute();
+
+                // دریافت اطلاعات کاربر پس از ثبت‌نام
+                $sql = "SELECT * FROM users WHERE email=?";
+                $statement = $conn->prepare($sql);
+                $statement->execute([$email]);
+                $user = $statement->fetch();
+
+                // افزودن اطلاعات کاربر به جلسه
+                $_SESSION['user'] = $user;
+
+                header("location:panel\index.php");
             } else {
-                $error = "ایمیل تکراری هستش ";
+                $error = "ایمیل تکراری است";
             }
         } else {
-            $error = "رمز عبور باید حداقل 4 کارکتر باشد";
+            $error = "رمز عبور باید حداقل 4 کاراکتر باشد";
         }
     } else {
-        $error = "رمز عبور با تاییدیع یکی نیس";
+        $error = "رمز عبور با تایید یکسان نیست";
     }
 } else {
     if (!empty($_POST)) {
         $error = "فرم را پر کنید";
     }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
