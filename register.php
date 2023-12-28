@@ -24,14 +24,16 @@ if (
             if ($user === false) {
                 $username = $_POST['username'];
                 $email = $_POST['email'];
-
+                $role = 'writer';
                 // هش کردن رمز عبور
                 $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-                $result = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-                $result->bindValue(1, $username);
-                $result->bindValue(2, $email);
-                $result->bindValue(3, $passwordHash);
+                $result = $conn->prepare("INSERT INTO users (role,username, email, password) VALUES (?,?, ?, ?)");
+                $result->bindValue(1, $role);
+                $result->bindValue(2, $username);
+                $result->bindValue(3, $email);
+                $result->bindValue(4, $passwordHash);
+
                 $result->execute();
 
                 // دریافت اطلاعات کاربر پس از ثبت‌نام

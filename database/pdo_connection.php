@@ -4,7 +4,7 @@ $username = "root";
 $password = "";
 
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=php-pure", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=php_pure", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 } catch (PDOException $e) {

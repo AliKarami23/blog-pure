@@ -104,7 +104,7 @@ $stmt->execute();
                 echo '<div class="col-md-6 col-lg-3 mt-3">';
                 echo '<div class="post">';
                 echo '<div class="post__img">';
-                $imagePath = __DIR__ . '/panel/storage/images/' . $row['image'];
+                $imagePath = $row['image'];
                 echo '<img src="' . $imagePath . '" alt="تصویر">';
                 echo '</div>';
                 echo '<h4 class=""><a href="#" class="post__title d-block">' . $row['title'] . '</a></h4>';
@@ -114,7 +114,6 @@ $stmt->execute();
                 echo '</div>';
             }
             ?>
-
         </div>
     </div>
      <footer class="footer">

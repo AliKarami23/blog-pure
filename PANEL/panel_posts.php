@@ -171,19 +171,32 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result as $row) {
                 echo '<div class="article">';
                 echo '<div class="article-text" style="float: right; width: 65%;">';
-                echo '<h2>' . $row['title'] . '</h2>';
-                echo '<p>' . 'نویسنده: ' . $row['writer'] . '</p>';
-                echo '<p>' . 'تاریخ انتشار: ' . $row['date'] . '</p>';
-                echo '<p>' . $row['caption'] . '</p>';
+                echo '<h2>' . htmlspecialchars($row['title']) . '</h2>';
+                echo '<p>' . 'نویسنده: ' . htmlspecialchars($row['writer']) . '</p>';
+                echo '<p>' . 'تاریخ انتشار: ' . htmlspecialchars($row['date']) . '</p>';
+                echo '<p>' . htmlspecialchars($row['caption']) . '</p>';
                 echo '</div>';
                 echo '<div class="article-image" style="float: left; width: 25%;">';
-                echo '<img src="data:image/jpeg;base64,' . base64_encode(file_get_contents($row['image'])) . '" alt="عکس پست" style="max-width: 100%; height: auto;">';
+
+                $imagePath = '../' . $row['image'];
+                $realImagePath = realpath($imagePath);
+
+                if ($realImagePath !== false) {
+                    $imageData = file_get_contents($realImagePath);
+                    $base64Image = base64_encode($imageData);
+                    echo '<img src="data:image/jpeg;base64,' . $base64Image . '" alt="عکس پست" style="max-width: 100%; height: auto;">';
+                } else {
+                    echo '<p>تصویر یافت نشد</p>';
+                }
+
                 echo '</div>';
                 echo '<div style="clear: both;"></div>';
                 echo '</div>';
                 echo '<div style="border-bottom: 1px solid black;width: 100%;margin: 25px 0;"></div>';
             }
             ?>
+
+
         </div>
     </div>
 </section>
