@@ -2,39 +2,35 @@
 include "database/pdo_connection.php";
 $error = "";
 
-// اگر کاربر وارد شده است، جلسه را حذف کنید
 if (isset($_SESSION['user'])) {
     unset($_SESSION['user']);
 }
 
 if (
-    isset($_POST['username']) && $_POST['username'] !== ''
-    && isset($_POST['email']) && $_POST['email'] !== ''
-    && isset($_POST['password']) && $_POST['password'] !== ''
-    && isset($_POST['confirm']) && $_POST['confirm'] !== ''
+    isset($_POST['username'], $_POST['email'], $_POST['password'], $_POST['confirm'])
+    && !empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm'])
 ) {
-    if ($_POST['password'] === $_POST['confirm']) {
-        if (strlen($_POST['password']) > 4) {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm'];
+
+    if ($password === $confirmPassword) {
+        if (strlen($password) > 4) {
             // استفاده از statements پیش‌فرض
             $sql = "SELECT * FROM users WHERE email=?";
             $statement = $conn->prepare($sql);
-            $statement->execute([$_POST['email']]);
+            $statement->execute([$email]);
             $user = $statement->fetch();
 
             if ($user === false) {
-                $username = $_POST['username'];
-                $email = $_POST['email'];
-                $role = 'writer';
                 // هش کردن رمز عبور
-                $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-                $result = $conn->prepare("INSERT INTO users (role,username, email, password) VALUES (?,?, ?, ?)");
-                $result->bindValue(1, $role);
-                $result->bindValue(2, $username);
-                $result->bindValue(3, $email);
-                $result->bindValue(4, $passwordHash);
+                $role = 'writer';
 
-                $result->execute();
+                $result = $conn->prepare("INSERT INTO users (role, username, email, password) VALUES (?, ?, ?, ?)");
+                $result->execute([$role, $username, $email, $passwordHash]);
 
                 // دریافت اطلاعات کاربر پس از ثبت‌نام
                 $sql = "SELECT * FROM users WHERE email=?";
@@ -45,7 +41,7 @@ if (
                 // افزودن اطلاعات کاربر به جلسه
                 $_SESSION['user'] = $user;
 
-                header("location:panel\index.php");
+                header("location:panel/index.php");
             } else {
                 $error = "ایمیل تکراری است";
             }
@@ -62,7 +58,6 @@ if (
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -77,19 +72,21 @@ if (
     <link rel="stylesheet" href="styles/css/reset.css">
     <!-- Vazir Font -->
     <link rel="stylesheet" href="fonts/vazir.css">
-    <!-- Fontawsome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fontawesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <title>ثبت نام</title>
 </head>
 <body>
 <section class="d-flex justify-content-center align-items-center min-h-screen bg">
     <div id="overlay"></div>
     <div class="form-container">
-        <form action="#" method="POST" >
+        <form action="#" method="POST">
 
             <section style="color:red;">
                 <?php
-                if($error!=="") echo $error;
+                if ($error !== "") echo $error;
                 ?>
             </section>
 
@@ -120,7 +117,7 @@ if (
             </div>
 
             <p class="text">
-                قبلا ثبت نام کرده اید ؟ <a href="/blog-pure/login.php" class="text-primary">ورود</a>
+                قبلا ثبت نام کرده اید؟ <a href="/blog-pure/login.php" class="text-primary">ورود</a>
             </p>
         </form>
     </div>

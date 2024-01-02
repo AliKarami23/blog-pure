@@ -12,12 +12,11 @@ if (
     isset($_POST['email']) && $_POST['email'] !== ''
     && isset($_POST['password']) && $_POST['password'] !== ''
 ) {
-
     if (isset($_POST['sub'])) {
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        // استفاده از statements پیش‌فرض
+        // استفاده از prepared statements
         $result = $conn->prepare("SELECT * FROM users WHERE email=?");
         $result->bindValue(1, $email);
         $result->execute();
@@ -28,7 +27,8 @@ if (
             // استفاده از password_verify برای بررسی هش شده بودن رمز عبور
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user'] = $user;
-                header("location:panel\index.php");
+                header("location:panel/index.php");
+                exit();
             } else {
                 $error = "رمز عبور اشتباه است";
             }
@@ -42,8 +42,6 @@ if (
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -60,7 +58,9 @@ if (
     <!-- Vazir Font -->
     <link rel="stylesheet" href="fonts/vazir.css">
     <!-- Fontawsome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <title>ورود به حساب کاربری</title>
 </head>
 <body>
@@ -70,13 +70,14 @@ if (
         <form action="#" method="POST">
             <section style="color:red;">
                 <?php
-                if($error!=="") echo $error;
+                if ($error !== "") echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8');
                 ?>
             </section>
 
             <h1 class="title">ورود به حساب کاربری</h1>
             <div class="mt-3 position-relative">
-                <input name="email" type="email" class="field " placeholder="ایمیل ...">
+                <input name="email" type="email" class="field " placeholder="ایمیل ..."
+                       value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                 <i class="fa fa-user field_icon"></i>
             </div>
             <div class="mt-3 position-relative">
@@ -86,7 +87,7 @@ if (
             </div>
 
             <div class="mt-3">
-                <button  name="sub"  type="submit" class="btn-submit bg-primary ">
+                <button name="sub" type="submit" class="btn-submit bg-primary ">
                     <i class="fa fa-sign-in ms-1"></i>
                     <span>ورود به حساب کاربری</span>
                 </button>

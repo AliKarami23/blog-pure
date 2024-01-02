@@ -8,21 +8,23 @@ if (!isset($_SESSION['user'])) {
 }
 
 if (isset($_POST['sub'])) {
-    $title = htmlspecialchars($_POST['title']);
-    $caption = htmlspecialchars($_POST['caption']);
-    $writer = htmlspecialchars($_POST['writer']);
+    $title = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
+    $caption = filter_var($_POST['caption'], FILTER_SANITIZE_STRING);
+    $writer = filter_var($_POST['writer'], FILTER_SANITIZE_STRING);
     $user_id = $_SESSION['user']['id'];
     $date = jdate("Y/m/d");
 
-    $image_info = getimagesize($_FILES['image_file']['tmp_name']);
-    if ($image_info === FALSE || !in_array($image_info[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
+    $image_tmp = $_FILES['image_file']['tmp_name'];
+    $image_type = exif_imagetype($image_tmp);
+
+    if ($image_type === false || !in_array($image_type, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
         echo 'Error: Invalid image format.';
         exit();
     }
 
     $image_path = 'storage/images/' . basename($_FILES['image_file']['name']);
 
-    if (!move_uploaded_file($_FILES['image_file']['tmp_name'], '../' . $image_path)) {
+    if (!move_uploaded_file($image_tmp, '../' . $image_path)) {
         echo 'Error uploading image.';
         exit();
     }
@@ -35,14 +37,14 @@ if (isset($_POST['sub'])) {
         $result->bindParam(2, $caption);
         $result->bindParam(3, $writer);
         $result->bindParam(4, $date);
-        $result->bindParam(5, $image_path); // Change here
+        $result->bindParam(5, $image_path);
         $result->bindParam(6, $user_id);
         $result->execute();
 
         $conn->commit();
 
         header("location:panel_posts.php");
-    } catch (Exception $e) {
+    } catch (PDOException $e) {
         $conn->rollBack();
         echo "Error: " . $e->getMessage();
     }
